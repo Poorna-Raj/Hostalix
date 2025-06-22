@@ -44,8 +44,7 @@
               <select name="status" id="status">
                 <option value="">--ALL--</option>
                 <option value="Available">Available</option>
-                <option value="Booked">Booked</option>
-                <option value="Repair">Repair</option>
+                <option value="Not Available">Not Available</option>
               </select>
             </div>
             <div class="form-group">
@@ -61,7 +60,9 @@
             </div>
           </form>
         </div>
-
+		<div style="text-align: right; margin-bottom: 10px;">
+          <button id="NEWaddRoomBtn" class="btn-primary">+ Add Room</button>
+        </div>
         <table class="services-table" id="roomTable">
           <thead>
             <tr>
@@ -100,7 +101,7 @@
         </table>
       </div>
 
-      <!-- Room Modal -->
+      <!-- ---------------- Room Modal -------------------------------------- -->
       <div class="popup-overlay" id="popup">
         <div class="popup-form">
           <button class="close-btn" id="addRoomClose">×</button>
@@ -162,7 +163,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="floorNumber">Floor Number</label>
-                <input type="number" name="floorNumber" id="floorNumber" min="1" max="100" placeholder="e.g. 1" />
+                <input type="number" name="floorNumber" id="floorNumber" min="0" max="100" placeholder="e.g. 1" />
               </div>
               <div class="form-group">
                 <label for="available">Available</label>
@@ -187,6 +188,97 @@
         </div>
       </div>
     </div>
+	<!-- ---------------- End Room Modal -------------------------------------- -->
+	<!--ADD ROOM -->
+	          <div class="popup-overlay" id="addRoomPopup">
+	        <div class="popup-form">
+	          <button class="close-btn" id="addRoomCloseBtn">×</button>
+	          <h2>Add New Room</h2>
+	          <form id="NewaddRoomForm">
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label for="newRoomId">Room ID</label>
+	                <input type="text" id="newRoomId" required readonly />
+	              </div>
+	              <div class="form-group">
+	                <label for="newRoomName">Room Name</label>
+	                <input type="text" id="newRoomName" name="roomName" required placeholder="Enter room name" />
+	              </div>
+	            </div>
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label for="newRoomType">Room Type</label>
+	                <select id="newRoomType" required name="roomType">
+	                  <option value="">Select type</option>
+	                  <option value="Deluxe">Deluxe</option>
+	                  <option value="Standard">Standard</option>
+	                  <option value="Suite">Suite</option>
+	                  <option value="Family">Family</option>
+	                </select>
+	              </div>
+	              <div class="form-group">
+	                <label for="newBedType">Bed Type</label>
+	                <select id="newBedType" required name="bedType">
+	                  <option value="">Select type</option>
+	                  <option value="Single">Single</option>
+	                  <option value="Double">Double</option>
+	                  <option value="Twin">Twin</option>
+	                  <option value="Queen">Queen</option>
+	                  <option value="King">King</option>
+	                </select>
+	              </div>
+	            </div>
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label for="newMaxOccupancy">Max Occupancy</label>
+	                <input type="number" id="newMaxOccupancy" name="max_occupancy" required min="1" placeholder="e.g. 2" />
+	              </div>
+	              <div class="form-group">
+	                <label for="newBedCount">Bed Count</label>
+	                <input type="number" id="newBedCount" name="bedCount" required min="1" max="10" placeholder="e.g. 2" />
+	              </div>
+	            </div>
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label for="newPrice">Price Per Night</label>
+	                <input type="number" id="newPrice" required min="0" name="pricePerNight" step="0.01" placeholder="e.g. 120.00" />
+	              </div>
+	              <div class="form-group">
+	                <label for="newLocation">Location</label>
+	                <input type="text" id="newLocation" name="location" placeholder="e.g. North Wing" />
+	              </div>
+	            </div>
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label for="newFloor">Floor Number</label>
+	                <input type="number" id="newFloor" name="floorNumber" min="0" max="100" placeholder="e.g. 1" />
+	              </div>
+	              <div class="form-group">
+	                <label for="newAvailable">Available</label>
+	                <select id="newAvailable" name="available">
+	                  <option value="true">Available</option>
+	                  <option value="false">Not Available</option>
+	                </select>
+	              </div>
+	            </div>
+	            <div class="form-row">
+	              <div class="form-group">
+	                <label><input type="checkbox" name="hasWiFi" id="newWifi" /> WiFi</label>
+	              </div>
+	              <div class="form-group">
+	                <label><input type="checkbox" name="hasAC" id="newAC" /> Air Conditioning</label>
+	              </div>
+	            </div>
+	            <div class="form-actions">
+	              <button type="submit">Add Room</button>
+	            </div>
+	          </form>
+	        </div>
+	      </div>
+	        
+	          
+	      </div>
+	    </div>
 <script src="script/room.js" defer></script>
 
   </body>

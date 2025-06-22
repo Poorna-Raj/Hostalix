@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	const editPopup = document.getElementById('popup');
 	const updateRoomForm = document.getElementById('addRoomForm'); 
 	const closeRoomForm = document.getElementById('addRoomClose');
+	const addRoomButton = document.getElementById('NEWaddRoomBtn');
+	const addRoomClose = document.getElementById('addRoomCloseBtn');
+	const addRoomForm = document.getElementById('NewaddRoomForm');
+	const filterForm = document.getElementById('filterForm');
+	
 	fetch('/rooms')
 	  .then(async response => {
 	    const contentType = response.headers.get('content-type');
@@ -13,39 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	    if (!Array.isArray(data.data)) throw new Error('Expected array of rooms');
 		const rooms = data.data;
-	    const tableBody = document.querySelector('#roomTable tbody');
-	    tableBody.innerHTML = '';
-
-	    rooms.forEach(room => {
-	      const row = document.createElement('tr');
-	      row.innerHTML = `
-	        <td>${room.roomId}</td>
-	        <td>${room.roomName}</td>
-	        <td>${room.roomType}</td>
-	        <td>${room.bedType}</td>
-	        <td>${room.maxOccupancy}</td>
-	        <td>${room.bedCount}</td>
-	        <td>LKR ${room.pricePerNight.toFixed(2)}</td>
-	        <td>${room.location}</td>
-	        <td>${room.floorNumber}</td>
-	        <td>${room.hasWiFi ? 'Yes' : 'No'}</td>
-	        <td>${room.hasAC ? 'Yes' : 'No'}</td>
-	        <td>
-	          <span class="availability ${room.available ? 'available' : 'unavailable'}">
-	            ${room.available ? 'Available' : 'Not Available'}
-	          </span>
-	        </td>
-	        <td>
-	          <button class="action-btn edit" data-roomId = "${room.roomId}">Edit</button>
-	          <button class="action-btn delete" data-roomId = "${room.roomId}">Delete</button>
-	        </td>
-	      `;
-	      tableBody.appendChild(row);
-	    });
+	    
+	    populateRoomTable(rooms);
 	  })
-	  .catch(error => {
-	    console.error('Failed to load room data:', error);
-	  });
+	  
 	  
 	  tableBody.addEventListener('click', async function(event) {
 		const target = event.target;
@@ -145,4 +121,129 @@ document.addEventListener('DOMContentLoaded', function () {
 			console.error('Error updating room:', error);
 		}
 	  });
+	  closeRoomForm.addEventListener('click', function() {
+		editPopup.style.display = 'none';
+	  });
+	  addRoomButton.addEventListener('click', function() {
+		const addRoomPopup = document.getElementById('addRoomPopup');
+		addRoomPopup.style.display = 'flex';
+	  });
+	  addRoomClose.addEventListener('click', function(){
+		const addRoomPopup = document.getElementById('addRoomPopup');
+		addRoomPopup.style.display = 'none';
+	  });
+	  addRoomForm.addEventListener('submit', async function(event){
+		event.preventDefault();
+		
+		const formData = {
+			roomName: addRoomForm.roomName.value,
+			roomType: addRoomForm.roomType.value,
+			bedType: addRoomForm.bedType.value,
+			maxOccupancy: parseInt(addRoomForm.max_occupancy.value, 10),
+			bedCount: parseInt(addRoomForm.bedCount.value, 10),
+			pricePerNight: parseFloat(addRoomForm.pricePerNight.value),
+			location: addRoomForm.location.value,
+			floorNumber: parseInt(addRoomForm.floorNumber.value, 10),
+			hasWiFi: addRoomForm.hasWiFi.checked,
+			hasAC: addRoomForm.hasAC.checked,
+			available: addRoomForm.available.value
+		}
+		try{
+			const response = await fetch('/rooms',{
+				method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+				body: JSON.stringify(formData)
+			});
+			const result = await response.json();
+			if (!response.ok) {
+                throw new Error(`Error adding room: ${result.message}`);
+            }
+			alert('Room added successfully!');
+			location.reload();
+		}
+		catch(error){
+			console.error('Error adding room:', error);
+		}
+	  });
+	  
+	  filterForm.addEventListener('submit', async function(event) {
+	  	event.preventDefault();
+
+	  	let name = filterForm.searchName.value.trim();
+	  	let available = filterForm.status.value;
+	  	let order = filterForm.order.value;
+
+	  	// Convert strings to appropriate types
+	  	if (available === 'Available') {
+	  		available = true;
+	  	} else if (available === 'Not Available') {
+	  		available = false;
+	  	} else {
+	  		available = ''; // let the backend ignore this
+	  	}
+
+	  	if (order === 'price_asc') {
+	  		order = 1;
+	  	} else if (order === 'price_desc') {
+	  		order = 2;
+	  	} else {
+	  		order = ''; // no order preference
+	  	}
+
+	  	// Build query string dynamically
+	  	const params = new URLSearchParams();
+	  	if (name) params.append('name', name);
+	  	if (available !== '') params.append('available', available);
+	  	if (order !== '') params.append('order', order);
+
+	  	try {
+	  		const response = await fetch(`/rooms/filter?${params.toString()}`);
+	  		const result = await response.json();
+
+	  		if (!response.ok) {
+	  			throw new Error(`Error filtering rooms: ${result.message}`);
+	  		}
+
+	  		if (Array.isArray(result.data)) {
+	  			populateRoomTable(result.data);
+	  		} else {
+	  			throw new Error('Expected array of rooms after filtering');
+	  		}
+	  	} catch (error) {
+	  		console.error('Error filtering rooms:', error);
+	  	}
+	  });
+
   });
+  function populateRoomTable(rooms) {
+	const tableBody = document.querySelector('#roomTable tbody');
+  		tableBody.innerHTML = '';
+  		rooms.forEach(room => {
+  			const row = document.createElement('tr');
+  			row.innerHTML = `
+  				<td>${room.roomId}</td>
+  				<td>${room.roomName}</td>
+  				<td>${room.roomType}</td>
+  				<td>${room.bedType}</td>
+  				<td>${room.maxOccupancy}</td>
+  				<td>${room.bedCount}</td>
+  				<td>LKR ${room.pricePerNight.toFixed(2)}</td>
+  				<td>${room.location}</td>
+  				<td>${room.floorNumber}</td>
+  				<td>${room.hasWiFi ? 'Yes' : 'No'}</td>
+  				<td>${room.hasAC ? 'Yes' : 'No'}</td>
+  				<td>
+  					<span class="availability ${room.available ? 'available' : 'unavailable'}">
+  						${room.available ? 'Available' : 'Not Available'}
+  					</span>
+  				</td>
+  				<td>
+  					<button class="action-btn edit" data-roomId="${room.roomId}">Edit</button>
+  					<button class="action-btn delete" data-roomId="${room.roomId}">Delete</button>
+  				</td>
+  			`;
+  			tableBody.appendChild(row);
+  		});
+  	}

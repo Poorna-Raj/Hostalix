@@ -93,7 +93,7 @@ public class RoomController {
 		}
 		
 	}
-	@GetMapping("/rooms/filter/")
+	@GetMapping("/rooms/filter")
 	public ResponseEntity<Map<String,Object>> getFilterRoom(
 	@RequestParam(required = false) String name,
     @RequestParam(required = false) Boolean available,
