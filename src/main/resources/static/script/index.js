@@ -27,6 +27,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 				    case 'Manager':
 				        window.location.href = '../manager.html';
                         break;
+					case 'Receptionist':
+						window.location.href = '../room.html';
+						break;
                     default:
                         alert('Unknown role. Please contact support.');
                 }

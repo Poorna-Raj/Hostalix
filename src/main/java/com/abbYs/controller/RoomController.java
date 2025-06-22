@@ -120,6 +120,28 @@ public class RoomController {
 		}
 		
 	}
+	@GetMapping("/rooms/{id}")
+	public ResponseEntity<Map<String,Object>> getRoomById(@PathVariable int id){
+		Map<String,Object> response = new HashMap<>();
+		try {
+			RoomModel room = roomDAO.getRoomById(id);
+			if(room != null) {
+				response.put("success", true);
+				response.put("message", "Room fetched successfully");
+				response.put("data", room);
+				return ResponseEntity.ok(response);
+			} else {
+				response.put("success", false);
+				response.put("message", "Room not found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+			}
+		}
+		catch(Exception ex) {
+			response.put("success", false);
+			response.put("message", "Error fetching room: " + ex.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	@GetMapping("/rooms")
 	public ResponseEntity<Map<String,Object>>getAllRooms(){
 		Map<String,Object> response = new HashMap<>();

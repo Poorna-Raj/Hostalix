@@ -175,4 +175,35 @@ public class RoomDAO {
 			throw new RuntimeException("Error filtering rooms: " + sqlex.getMessage(), sqlex);
 		}
 	}
+	
+	public RoomModel getRoomById(int roomId) {
+		String sql = "SELECT * FROM tbl_rooms WHERE room_id = ?";
+		try(Connection conn = dataSource.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, roomId);
+			try(ResultSet rs = stmt.executeQuery()) {
+				if(rs.next()) {
+					return new RoomModel(
+						rs.getInt("room_id"),
+						rs.getString("room_name"),
+						RoomType.fromString(rs.getString("room_type")),
+						BedType.fromString(rs.getString("bed_type")),
+						rs.getInt("max_occupancy"),
+						rs.getDouble("price_per_night"),
+						rs.getString("location"),
+						rs.getInt("floor_number"),
+						rs.getInt("bed_count"),
+						rs.getBoolean("has_wifi"),
+						rs.getBoolean("has_ac"),
+						rs.getBoolean("available")
+					);
+				} else {
+					return null; // No room found with the given ID
+				}
+			}
+		}
+		catch(SQLException sqlex) {
+			throw new RuntimeException("Error fetching room by ID: " + sqlex.getMessage(), sqlex);
+		}
+	}
 }

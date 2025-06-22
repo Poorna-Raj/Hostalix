@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Room Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style/room.css" />
+   
+    
+  </head>
+  <body>
+
+
+ <nav class="navbar">
+      <div class="navbar-left">
+        <span class="brand">Elephant & Nature Resort</span>
+      </div>
+      <div class="navbar-center">
+        <a href="#">Home</a>
+        <a href="#">Calendar</a>
+        <a href="#" class="active">Room</a>
+        <a href="#">Booking</a>
+        <a href="#">Customers</a>
+        <a href="#">Profile</a>
+      </div>
+      <div class="navbar-right">
+        <a href="#" class="btn-logout">Logout</a>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+      <!-- Room Management Section -->
+      <div id="about" class="page">
+        <div class="filter-container">
+          <form id="filterForm" class="filter-form">
+            <div class="form-group">
+              <label for="search-name">Search by Name</label>
+              <input type="text" name="searchName" id="search-name" placeholder="Room Name" />
+            </div>
+            <div class="form-group">
+              <label for="status">Room Status</label>
+              <select name="status" id="status">
+                <option value="">--ALL--</option>
+                <option value="Available">Available</option>
+                <option value="Booked">Booked</option>
+                <option value="Repair">Repair</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="order">Order By</label>
+              <select name="order" id="order">
+                <option value="">--DEFAULT--</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn-primary">Search Rooms</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="services-table" id="roomTable">
+          <thead>
+            <tr>
+              <th>Room ID</th>
+              <th>Room Name</th>
+              <th>Room Type</th>
+              <th>Bed Type</th>
+              <th>Max Occupancy</th>
+              <th>Bed Count</th>
+              <th>Price Per Night</th>
+              <th>Location</th>
+              <th>Floor Number</th>
+              <th>WiFi</th>
+              <th>AC</th>
+              <th>Available</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+           <tr>
+    <td>RM101</td>
+    <td>Premium Room</td>
+    <td>Deluxe</td>
+    <td>King</td>
+    <td>3</td>
+    <td>2</td>
+    <td>$120.00</td>
+    <td>East Wing</td>
+    <td>2</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td><span class="availability available">Available</span></td>
+    <td><button class="action-btn edit">Edit</button> <button class="action-btn delete">Delete</button></td>
+  </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Room Modal -->
+      <div class="popup-overlay" id="popup">
+        <div class="popup-form">
+          <button class="close-btn" id="addRoomClose">×</button>
+          <h2 id="roomModalTitle">Update Room</h2>
+          <form id="addRoomForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="roomId">Room ID</label>
+                <input type="text" name="roomId" id="roomId" placeholder="Enter room ID" required readonly />
+              </div>
+              <div class="form-group">
+                <label>Room Name</label>
+                <input type="text" name="roomName" placeholder="Enter room name" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Room Type</label>
+                <select required name="roomType">
+                  <option value="">Select type</option>
+                  <option value="Deluxe">Deluxe</option>
+                  <option value="Standard">Standard</option>
+                  <option value="Suite">Suite</option>
+                  <option value="Family">Family</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bed Type</label>
+                <select required name="bedType">
+                  <option value="">Select type</option>
+                  <option value="Single">Single</option>
+                  <option value="Double">Double</option>
+                  <option value="Twin">Twin</option>
+                  <option value="Queen">Queen</option>
+                  <option value="King">King</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="max_occupancy">Maximum Occupancy</label>
+                <input type="number" id="max_occupancy" name="max_occupancy" required min="1"placeholder="e.g. 2" />
+              </div>
+              <div class="form-group">
+                <label for="bedCount">Bed Count</label>
+                <input type="number" id="bedCount" name="bedCount" required min="1" max="10" placeholder="e.g. 2" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pricePerNight">Price Per Night</label>
+                <input type="text" name="pricePerNight" id="pricePerNight" placeholder="Enter price per night" required />
+              </div>
+              <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" name="location" id="location" placeholder="e.g. North Wing" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="floorNumber">Floor Number</label>
+                <input type="number" name="floorNumber" id="floorNumber" min="1" max="100" placeholder="e.g. 1" />
+              </div>
+              <div class="form-group">
+                <label for="available">Available</label>
+                <select name="available" id="available">
+                  <option value="true">Available</option>
+                  <option value="false">Not Available</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label><input type="checkbox" name="hasWiFi" id="hasWiFi" /> WiFi</label>
+              </div>
+              <div class="form-group">
+                <label><input type="checkbox" name="hasAC" id="hasAC" /> Air Conditioning</label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" id="roomModalSubmitBtn">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<script src="script/room.js" defer></script>
+
+  </body>
+  </html>
